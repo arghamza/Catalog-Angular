@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {ProductService} from "../services/product.service";
-import {Product} from "../model/product.model";
+import {ProductService} from "../../services/product.service";
+import {Product} from "../../model/product.model";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {AuthenticationService} from "../services/authentication.service";
+import {AuthenticationService} from "../../services/authentication.service";
 import {Router} from "@angular/router";
 
 @Component({
@@ -26,25 +26,25 @@ export class ProductsComponent implements OnInit {
     this.searchFromGroup=this.fb.group({
       keyword:this.fb.control(null),
     })
-    this.handleGetPageProducts();
+    this.handleGetAllProducts();
   }
 
-  handleGetPageProducts(){
-    this.productService.getPageProduct(this.currentPage,this.pageSize).subscribe({
-        next : (data)=>{
-          this.products=data.products;
-          this.totalPages=data.totalPages;
-        },
-        error:(err)=>{
-          this.errorMessage=err;
-        }
-      }
-    );
-  }
+  // handleGetPageProducts(){
+  //   this.productService.getPageProduct(this.currentPage,this.pageSize).subscribe({
+  //       next : (data)=>{
+  //         this.products=data.products;
+  //         this.totalPages=data.totalPages;
+  //       },
+  //       error:(err)=>{
+  //         this.errorMessage=err;
+  //       }
+  //     }
+  //   );
+  // }
   handleGetAllProducts(){
     this.productService.getAllProducts().subscribe({
         next : (data)=>{
-          this.products=data;
+          this.products=data["_embedded"]["products"];
         },
         error:(err)=>{
           this.errorMessage=err;
@@ -56,8 +56,10 @@ export class ProductsComponent implements OnInit {
   handleDeleteProduct(p: Product) {
     let conf=confirm("Are you sure");
     if(!conf)return;
-    this.productService.deleteProduct(p.id).subscribe({
+    console.log(this.productService.deleteProduct(p))
+    this.productService.deleteProduct(p).subscribe({
       next : (data)=>{
+        console.log(data)
         let index=this.products.indexOf(p);
         this.products.splice(index,1)
       }
@@ -65,41 +67,41 @@ export class ProductsComponent implements OnInit {
   }
 
   handleSetPromotion(p: Product) {
-    let promo=p.promotion;
-    this.productService.setPromotion(p.id).subscribe({
-      next:(data)=>{
-        p.promotion=!promo;
-      },
-      error:err => {
-        this.errorMessage=err;
+    let  promo=p.promotion ;
+    this.productService.setPromotion(p.id , p).subscribe(
+      {
+        next: (data)=>{
+
+        } , error:err => {
+          this.errorMessage=err ;
+        }
       }
-    })
+    )
   }
 
   handleSearchProducts() {
     this.currentAction="search";
     this.currentPage=0;
     let keyword=this.searchFromGroup.value.keyword;
-    this.productService.searchProduct(keyword,this.currentPage,this.pageSize).subscribe({
+    this.productService.searchProduct(keyword,this.products).subscribe({
       next:(data)=>{
-        this.products=data.products;
-        this.totalPages=data.totalPages;
+        this.products=data;
       }
     })
   }
-
-  gotoPage(i: number) {
-    this.currentPage=i;
-    if(this.currentAction=="all")
-      this.handleGetPageProducts();
-    else
-      this.handleSearchProducts()
-  }
-
+  //
+  // gotoPage(i: number) {
+  //   this.currentPage=i;
+  //   if(this.currentAction=="all")
+  //     this.handleGetPageProducts();
+  //   else
+  //     this.handleSearchProducts()
+  // }
+  //
   handleNewProduct() {
     this.router.navigateByUrl("/admin/newProduct")
   }
-
+  //
   handleEditProduct(p: Product) {
     this.router.navigateByUrl("/admin/editProduct/"+p.id)
   }

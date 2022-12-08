@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {ProductService} from "../services/product.service";
-import {Product} from "../model/product.model";
+import {ActivatedRoute, Router} from "@angular/router";
+import {ProductService} from "../../services/product.service";
+import {Product} from "../../model/product.model";
 import {Form, FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
@@ -14,7 +14,7 @@ export class EditProductComponent implements OnInit {
   productId!:string
   product!:Product
   productFormGroup!:FormGroup
-  constructor(private route:ActivatedRoute,public prodService:ProductService,private fb:FormBuilder) {
+  constructor(private route:ActivatedRoute,public prodService:ProductService,private fb:FormBuilder,private router:Router) {
     this.productId=this.route.snapshot.params['id']
   }
 
@@ -25,6 +25,7 @@ export class EditProductComponent implements OnInit {
         this.productFormGroup=this.fb.group({
           name : this.fb.control(this.product.name,[Validators.required,Validators.minLength(4)]),
           price : this.fb.control(this.product.price,[Validators.required,Validators.min(200)]),
+          quantity : this.fb.control(null,[Validators.required,Validators.min(5)]),
           promotion : this.fb.control(this.product.promotion,[Validators.required]),
         })
       },
@@ -35,10 +36,10 @@ export class EditProductComponent implements OnInit {
     )
   }
 
-  handleEditProduct() {
+  handleEditProduct(){
     let p=this.productFormGroup.value;
     p.id=this.product.id;
-    this.prodService.updateProduct(p).subscribe({
+    this.prodService.updateProduct(p,p.id.toString()).subscribe({
       next:(prod)=>{
         alert("Updated")
       },
@@ -46,5 +47,6 @@ export class EditProductComponent implements OnInit {
         console.log(err)
       }
     })
+    this.router.navigateByUrl("/admin/products")
   }
 }

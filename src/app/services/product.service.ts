@@ -3,72 +3,54 @@ import {Observable, of, throwError} from "rxjs";
 import {PageProduct, Product} from "../model/product.model";
 import {UUID} from "angular2-uuid";
 import {ValidationErrors} from "@angular/forms";
+import {HttpClient} from "@angular/common/http";
+import {environment} from "../../environments/environment";
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  private products!: Array<Product>;
-  constructor() {
-    this.products=[
-      {id:UUID.UUID(),name:"Computer",price:6500,promotion:true},
-      {id:UUID.UUID(),name:"Printer",price:3000,promotion:false},
-      {id:UUID.UUID(),name:"Phone",price:10000,promotion:true},
-    ];
-    for (let i=0;i<10;i++){
-      this.products.push({id:UUID.UUID(),name:"Computer",price:6500,promotion:true})
-      this.products.push({id:UUID.UUID(),name:"Printer",price:3000,promotion:false})
-      this.products.push({id:UUID.UUID(),name:"Phone",price:10000,promotion:true})
-    }
+
+  products!:Observable<Array<Product>>
+  prod!:Array<Product>
+
+  constructor( private http:HttpClient) {
   }
+
 
   public  getAllProducts():Observable<Array<Product>>{
-    let rnd=Math.random();
-    if(rnd<0.1)return throwError(()=>new Error("Internet Error"));
-    else return of([...this.products]);
+    return this.http.get<Array<Product>>(environment.backendProduct+"/products")
   }
-  public getPageProduct(page:number,size:number):Observable<PageProduct>{
-    let index=page*size;
-    let totalPages=~~(this.products.length/size);
-    if(this.products.length%size!=0)
-      totalPages++;
-    let pageProduct =this.products.slice(index,index+size);
-    return of({page:page,size:size,totalPages:totalPages,products:pageProduct})
-  }
-
-  public deleteProduct(id:string):Observable<boolean>{
-    this.products=this.products.filter(p=>p.id!=id);
-    return of(true)
+  // public getPageProduct(page:number,size:number):Observable<PageProduct>{
+  //   let index=page*size;
+  //   let totalPages=~~(this.products.length/size);
+  //   if(this.products.length%size!=0)
+  //     totalPages++;
+  //   let pageProduct =this.products.slice(index,index+size);
+  //   return of({page:page,size:size,totalPages:totalPages,products:pageProduct})
+  // }
+  //
+  public deleteProduct(p:Product):Observable<any>{
+    return this.http.delete(environment.backendProduct+"/products/"+p.id);
   };
 
-  public setPromotion(id:string):Observable<boolean>{
-    let product=this.products.find(p=>p.id==id);
-    if(product!=undefined){
-    product.promotion=!product.promotion;
-    return of(true)}
-    else return throwError(()=>new Error("Product nor found"));
+  public setPromotion(id : string , p : Product) : Observable<any>{
+    p.promotion=!p.promotion
+    return this.updateProduct(p , id) ;
   }
 
-  public searchProduct(keyword:string,page:number,size:number):Observable<PageProduct>{
-    let result=this.products.filter(p=>p.name.includes(keyword));
-    let index=page*size;
-    let totalPages=~~(result.length/size);
-    if(this.products.length%size!=0)
-      totalPages++;
-    let pageProduct =result.slice(index,index+size);
-    return of({page:page,size:size,totalPages:totalPages,products:pageProduct})
+  public searchProduct(keyword:string,products:Array<Product>):Observable<Array<Product>>{
+    let result=products.filter(p=>p.name.includes(keyword));
+    return of(result)
   }
 
   public addNewProduct(product:Product):Observable<Product>{
-    product.id=UUID.UUID();
-    this.products.push(product);
-    return of(product);
+    return this.http.post<Product>(environment.backendProduct+"/products",product);
   }
 
   public getProduct(id:string):Observable<Product>{
-    let product= this.products.find(p=>p.id==id);
-    if(product==undefined) return throwError(()=>new Error("Product not found"))
-    return of(product)
+  return this.http.get<Product>(environment.backendProduct+"/products/"+id)
   }
   getErrorMessage(name: string, error: ValidationErrors):string {
     if(error['required']){
@@ -81,8 +63,7 @@ export class ProductService {
     else return "";
   }
 
-  public updateProduct(product:Product):Observable<Product>{
-    this.products=this.products.map(p=>(p.id==product.id)?product:p);
-    return of(product)
+  public updateProduct(product:Product,id:string):Observable<any>{
+    return this.http.put(environment.backendProduct+"/products/"+id,product);
   }
 }

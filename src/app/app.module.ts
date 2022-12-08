@@ -3,13 +3,14 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ProductsComponent } from './products/products.component';
-import { CustomersComponent } from './customers/customers.component';
+import { ProductsComponent } from './product/products/products.component';
+import { CustomersComponent } from './customer/customers/customers.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import { LoginComponent } from './login/login.component';
 import { AdminTemplateComponent } from './admin-template/admin-template.component';
-import { NewProductComponent } from './new-product/new-product.component';
-import { EditProductComponent } from './edit-product/edit-product.component';
+import { NewProductComponent } from './product/new-product/new-product.component';
+import { EditProductComponent } from './product/edit-product/edit-product.component';
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { EditProductComponent } from './edit-product/edit-product.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

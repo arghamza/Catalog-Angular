@@ -1,6 +1,6 @@
 <div class="container">
   <nav class="p-2 m-2 border border-info">
-    <button *ngIf="authService.hasRole('ADMIN')" class="btn btn-outline-info" (click)="handleNewProduct()">New Product</button>
+    <button *ngIf="authService.hasRole('ADMIN')" class="btn btn-outline-info" (click)="handleNewProduct()" >New Product</button>
   </nav>
   <ng-template #errors>
     <div class="text-danger">{{errorMessage}}</div>
@@ -26,8 +26,9 @@
           <th>Id</th>
           <th>Name</th>
           <th>Price</th>
+          <th>Quantity</th>
           <th></th>
-          <th></th>
+<!--          <th></th>-->
         </tr>
       </thead>
       <tbody>
@@ -35,13 +36,11 @@
         <td> {{p.id}}</td>
         <td> {{p.name}}</td>
         <td> {{p.price}}</td>
-        <td>
-          <i *ngIf="p.promotion==true" class="bi bi-heart-fill text-success"></i>
-        </td>
+        <td> {{p.quantity}}</td>
         <td *ngIf="authService.hasRole('ADMIN')">
-          <button (click)="handleSetPromotion(p)" [ngClass]="p.promotion==true?'btn-danger':'btn-success'" class="btn ">
-            <span *ngIf="p.promotion==true">Promo Off</span>
-            <span *ngIf="p.promotion==false">Promo On</span>
+          <button (click)="handleSetPromotion(p)" class="btn">
+            <span *ngIf="p.promotion==true"><i class="bi bi-heart-fill text-success"></i></span>
+            <span *ngIf="p.promotion==false"><i class="bi bi-heart text-success"></i></span>
           </button>
         </td>
         <td *ngIf="authService.hasRole('ADMIN')">
@@ -58,9 +57,9 @@
       </tbody>
     </table>
     <ul class="nav nav-pills">
-      <li *ngFor="let item of [].constructor(this.totalPages);let i=index">
-        <a (click)="gotoPage(i)" [ngClass]="i==currentPage?'btn-info':'btn-outline-info'" class="btn ms-1 mt-1">{{i}}</a>
-      </li>
+<!--      <li *ngFor="let item of [].constructor(this.totalPages);let i=index">-->
+<!--        <a (click)="gotoPage(i)" [ngClass]="i==currentPage?'btn-info':'btn-outline-info'" class="btn ms-1 mt-1">{{i}}</a>-->
+<!--      </li>-->
     </ul>
    </div>
   </div>
