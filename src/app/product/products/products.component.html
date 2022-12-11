@@ -1,7 +1,4 @@
 <div class="container">
-  <nav class="p-2 m-2 border border-info">
-    <button *ngIf="authService.hasRole('ADMIN')" class="btn btn-outline-info" (click)="handleNewProduct()" >New Product</button>
-  </nav>
   <ng-template #errors>
     <div class="text-danger">{{errorMessage}}</div>
   </ng-template>
@@ -10,16 +7,24 @@
     Product List
   </div>
   <div class="card-body">
-    <form [formGroup]="searchFromGroup" (ngSubmit)="handleSearchProducts()">
-      <div class="input-group">
-        <label class="input-group-text">Keyword</label>
-        <input type="text" class="form-control" formControlName="keyword">
-        <button class="btn btn-info">
-          <i class="bi bi-search"></i>
-        </button>
-
+    <div class="row d-flex align-items-center">
+      <div class="col">
+        <form [formGroup]="searchFromGroup" (ngSubmit)="handleSearchProducts()">
+          <div class="input-group">
+            <label class="input-group-text">Keyword</label>
+            <input type="text" class="form-control" formControlName="keyword">
+            <button class="btn btn-outline-primary">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </form>
       </div>
-    </form>
+      <div class="col col-lg-2">
+        <nav class="p-2 text-center">
+          <button *ngIf="authService.hasRole('ADMIN')" class="btn btn-primary" (click)="handleNewProduct()">New Customer</button>
+        </nav>
+      </div>
+    </div>
     <table class="table table-hover mt-2">
       <thead>
         <tr>
@@ -27,7 +32,9 @@
           <th>Name</th>
           <th>Price</th>
           <th>Quantity</th>
-          <th></th>
+          <th>Promotion</th>
+          <th>Delete</th>
+          <th>Edit</th>
 <!--          <th></th>-->
         </tr>
       </thead>
@@ -49,7 +56,7 @@
           </button>
         </td>
         <td *ngIf="authService.hasRole('ADMIN')">
-          <button (click)="handleEditProduct(p)" class="btn btn-outline-success">
+          <button (click)="handleEditProduct(p)" class="btn btn-success">
             <i class="bi bi-pen"></i>
           </button>
         </td>

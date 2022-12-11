@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {ProductService} from "../../services/product.service";
+import {ProductService} from "../../services/product/product.service";
 import {Product} from "../../model/product.model";
-import {Form, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-edit-product',
@@ -25,7 +25,7 @@ export class EditProductComponent implements OnInit {
         this.productFormGroup=this.fb.group({
           name : this.fb.control(this.product.name,[Validators.required,Validators.minLength(4)]),
           price : this.fb.control(this.product.price,[Validators.required,Validators.min(200)]),
-          quantity : this.fb.control(null,[Validators.required,Validators.min(5)]),
+          quantity : this.fb.control(this.product.quantity,[Validators.required,Validators.min(5)]),
           promotion : this.fb.control(this.product.promotion,[Validators.required]),
         })
       },
@@ -40,7 +40,7 @@ export class EditProductComponent implements OnInit {
     let p=this.productFormGroup.value;
     p.id=this.product.id;
     this.prodService.updateProduct(p,p.id.toString()).subscribe({
-      next:(prod)=>{
+      next:()=>{
         alert("Updated")
       },
       error:(err)=>{

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthenticationService} from "../services/authentication.service";
+import {AuthenticationService} from "../../services/Authentication/authentication.service";
 import {Router} from "@angular/router";
 
 @Component({
@@ -16,7 +16,7 @@ export class AdminTemplateComponent implements OnInit {
 
   handleLogout(){
     this.authService.logout().subscribe({
-      next:(data)=>{
+      next:()=>{
         this.router.navigateByUrl("/login")
       }
     })

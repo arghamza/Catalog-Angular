@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {AuthenticationService} from "../services/authentication.service";
+import {AuthenticationService} from "../../services/Authentication/authentication.service";
 import {Router} from "@angular/router";
 
 @Component({
@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
       next:(data)=>{
         this.authService.authenticateUser(data).subscribe(
           {
-            next:(data)=>{
+            next:()=>{
                 this.router.navigateByUrl("/admin")
             }
           }

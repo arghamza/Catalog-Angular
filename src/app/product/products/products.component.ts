@@ -1,21 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import {ProductService} from "../../services/product.service";
+import {ProductService} from "../../services/product/product.service";
 import {Product} from "../../model/product.model";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {AuthenticationService} from "../../services/authentication.service";
+import {AuthenticationService} from "../../services/Authentication/authentication.service";
 import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-products',
-  templateUrl: './products.component.html',
-  styleUrls: ['./products.component.css']
+  templateUrl: 'products.component.html',
+  styleUrls: ['products.component.css']
 })
 export class ProductsComponent implements OnInit {
 
   products! : Array<Product>;
   currentPage:number=0;
-  pageSize:number=5;
-  totalPages:number=0;
   errorMessage! :String;
   searchFromGroup! : FormGroup;
   currentAction:string="all"
@@ -29,18 +27,6 @@ export class ProductsComponent implements OnInit {
     this.handleGetAllProducts();
   }
 
-  // handleGetPageProducts(){
-  //   this.productService.getPageProduct(this.currentPage,this.pageSize).subscribe({
-  //       next : (data)=>{
-  //         this.products=data.products;
-  //         this.totalPages=data.totalPages;
-  //       },
-  //       error:(err)=>{
-  //         this.errorMessage=err;
-  //       }
-  //     }
-  //   );
-  // }
   handleGetAllProducts(){
     this.productService.getAllProducts().subscribe({
         next : (data)=>{
@@ -67,16 +53,14 @@ export class ProductsComponent implements OnInit {
   }
 
   handleSetPromotion(p: Product) {
-    let  promo=p.promotion ;
-    this.productService.setPromotion(p.id , p).subscribe(
-      {
-        next: (data)=>{
-
-        } , error:err => {
-          this.errorMessage=err ;
-        }
+    p.promotion = !p.promotion;
+    this.productService.updateProduct(p,p.id).subscribe({
+      next: () => {
+      },
+      error : err => {
+        this.errorMessage = err;
       }
-    )
+    });
   }
 
   handleSearchProducts() {
@@ -89,15 +73,7 @@ export class ProductsComponent implements OnInit {
       }
     })
   }
-  //
-  // gotoPage(i: number) {
-  //   this.currentPage=i;
-  //   if(this.currentAction=="all")
-  //     this.handleGetPageProducts();
-  //   else
-  //     this.handleSearchProducts()
-  // }
-  //
+
   handleNewProduct() {
     this.router.navigateByUrl("/admin/newProduct")
   }

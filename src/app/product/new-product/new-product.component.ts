@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
-import {ProductService} from "../../services/product.service";
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {ProductService} from "../../services/product/product.service";
 import {Router} from "@angular/router";
 
 @Component({
@@ -27,7 +27,7 @@ export class NewProductComponent implements OnInit {
     let product=this.productFormGroup.value;
     this.productService.addNewProduct(product).subscribe(
       {
-        next: (data)=>{
+        next: ()=>{
           alert("success")
           this.productFormGroup.reset()
         },

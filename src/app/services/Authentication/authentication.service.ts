@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {AppUser} from "../model/user.model";
+import {AppUser} from "../../model/user.model";
 import {UUID} from "angular2-uuid";
 import {Observable, of, throwError} from "rxjs";
 
@@ -31,7 +31,7 @@ export class AuthenticationService {
     localStorage.setItem("authUser",JSON.stringify({username:appUser.username,roles:appUser.roles,jwt:"JWT_TOKEN"}));
     return of(true);
   }
-  public hasRole(role:string) : boolean {;
+  public hasRole(role:string) : boolean {
     return this.authenticatedUser!.roles.includes(role)
   }
 
