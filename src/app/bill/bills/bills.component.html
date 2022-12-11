@@ -13,7 +13,7 @@
             <div class="input-group">
               <label class="input-group-text">Keyword: </label>
               <input type="text" class="form-control" formControlName="keyword">
-              <button class="btn btn-outline-primary">
+              <button class="btn btn-outline-dark">
                 <i class="bi bi-search"></i>
               </button>
             </div>
@@ -21,14 +21,14 @@
         </div>
         <div class="col col-lg-2">
           <nav class="p-2 text-center">
-            <button *ngIf="authService.hasRole('ADMIN')" class="btn btn-primary" (click)="handleNewBill()">New Bill</button>
+            <button *ngIf="authService.hasRole('ADMIN')" class="btn btn-dark" (click)="handleNewBill()">New Bill</button>
           </nav>
         </div>
       </div>
       <table class="table table-hover mt-2">
         <thead>
         <tr class="text-center">
-          <th>ID</th> <th>Billing Date</th><th>Customer Id</th><th>Customer Name</th><th>Product Items</th><th>Actions</th><th></th>
+          <th>ID</th> <th>Billing Date</th><th>Customer Id</th><th>Customer Name</th><th>Product Items</th><th class="text-center">Delete</th>
         </tr>
         </thead>
         <tbody>
@@ -38,18 +38,25 @@
           <td>{{b.customerID}}</td>
           <td>{{b?.customer?.name}}</td>
           <td>
-            <table class="table table-hover">
+            <table class="table">
               <thead>
               <tr class="text-center">
-                <th>ID</th> <th>Product Name</th><th>Quantity</th><th>Price</th>
+                <th>Product Name</th><th>Quantity</th><th>Price</th>
               </tr>
               </thead>
               <tbody *ngFor="let p of b.productItems">
-                <td>{{p.id}}</td>
                 <td>{{p.productName}}</td>
                 <td>{{p.quantity}}</td>
                 <td>{{p.price}}</td>
               </tbody>
+              <tfoot>
+              <tr>
+                <th></th><th></th><td></td>
+              </tr>
+
+                <th></th><th>Total</th><td>{{getTotalPrice(b)}}</td>
+
+              </tfoot>
             </table>
           </td>
           <td *ngIf="authService.hasRole('ADMIN')">
@@ -57,11 +64,7 @@
               <i class="bi bi-trash"> </i>
             </button>
           </td>
-          <td *ngIf="authService.hasRole('ADMIN')">
-            <button (click)="handleEditBill(b)" class="btn btn-success">
-              <i class="bi bi-pencil"></i>
-            </button>
-          </td>
+
         </tr>
         </tbody>
       </table>

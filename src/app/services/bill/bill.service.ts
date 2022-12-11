@@ -21,7 +21,7 @@ export class BillService {
               private customerService : CustomerService
   ) {
     this.billsGatewayUrl = 'http://localhost:8888/BILLING-SERVICE/fullBills';
-    this.billsServiceUrl = 'http://localhost:8083/bills';
+    this.billsServiceUrl = 'http://localhost:8083/fullBill';
   }
 
   public findAll(): Observable<Bill[]> {

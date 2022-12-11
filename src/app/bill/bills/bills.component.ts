@@ -82,4 +82,11 @@ export class BillsComponent implements OnInit {
     });
   }
 
+  getTotalPrice(bill:Bill):number{
+    let total=0
+    bill.productItems.forEach((product)=>{
+      total+=product.price
+    })
+    return total
+  }
 }

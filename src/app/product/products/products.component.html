@@ -13,7 +13,7 @@
           <div class="input-group">
             <label class="input-group-text">Keyword</label>
             <input type="text" class="form-control" formControlName="keyword">
-            <button class="btn btn-outline-primary">
+            <button class="btn btn-outline-dark">
               <i class="bi bi-search"></i>
             </button>
           </div>
@@ -21,7 +21,7 @@
       </div>
       <div class="col col-lg-2">
         <nav class="p-2 text-center">
-          <button *ngIf="authService.hasRole('ADMIN')" class="btn btn-primary" (click)="handleNewProduct()">New Customer</button>
+          <button *ngIf="authService.hasRole('ADMIN')" class="btn btn-dark" (click)="handleNewProduct()">New Customer</button>
         </nav>
       </div>
     </div>
